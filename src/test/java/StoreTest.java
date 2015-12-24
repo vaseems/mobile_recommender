@@ -1,6 +1,7 @@
 import bootcamp.Mobile;
 import bootcamp.Store;
 import org.hamcrest.core.Is;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -17,8 +18,10 @@ import static org.junit.Assert.assertTrue;
 
 public class StoreTest {
 
-    @Test
-    public void shouldBeAbleToGetMobilesWithMaxPriceRange(){
+    private List<Mobile> mobiles;
+
+    @Before
+    public void setup() {
         Mobile sonyMobile = new Mobile();
         sonyMobile.setPrice(4000);
         Mobile samsungMobile = new Mobile();
@@ -29,12 +32,23 @@ public class StoreTest {
         motoMobile.setPrice(9000);
         Mobile micromaxMobile = new Mobile();
         micromaxMobile.setPrice(5500);
-        List<Mobile> mobiles = Arrays.asList(sonyMobile,samsungMobile,lgMobile,motoMobile,micromaxMobile);
+        mobiles = Arrays.asList(sonyMobile, samsungMobile, lgMobile, motoMobile, micromaxMobile);
+    }
+
+    @Test
+    public void shouldBeAbleToGetMobilesWithMaxPriceRange() {
         Store store = new Store(mobiles);
         List<Mobile> recMobiles = store.getMobilesWithMaxPrice(5000);
 
         assertThat(recMobiles.size(), Is.is(2));
         assertThat(recMobiles.get(0).getPrice(), Is.is(4000));
         assertThat(recMobiles.get(1).getPrice(), Is.is(2000));
+    }
+
+    @Test
+    public void shouldNotGetMobilesWhosePriceIsGreaterThanMaxPrice() {
+        Store store = new Store(mobiles);
+        List<Mobile> recMobiles = store.getMobilesWithMaxPrice(1000);
+        assertThat(recMobiles.size(), Is.is(0));
     }
 }
